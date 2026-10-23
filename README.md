@@ -58,16 +58,18 @@ Sitio web de una sola página para presentar los servicios de refrigeración ind
 | Variable | Requerida para | Descripción |
 | --- | --- | --- |
 | `DATABASE_URL` | Formulario y `db:setup` | URL privada de conexión a PostgreSQL. Solo se usa en el servidor. |
+| `IP_HASH_SALT` | Límite de solicitudes | Secreto aleatorio largo para generar hashes de IP. No se guarda la IP en claro. |
 | `RESEND_API_KEY` | Envío del formulario | API key privada de Resend. |
 | `CONTACT_TO_EMAIL` | Envío del formulario | Dirección que recibirá las solicitudes. |
 | `CONTACT_FROM_EMAIL` | Envío del formulario | Remitente verificado en Resend. |
 | `NEXT_PUBLIC_SITE_URL` | Dominio público y SEO | URL pública canónica del sitio, por ejemplo `https://midominio.com`. |
+| `NEXT_PUBLIC_SHOW_UNVERIFIED_CONTENT` | Contenido comercial pendiente de verificar | `false` lo oculta (valor recomendado); usa `true` solo tras confirmar cifras, testimonios y logos con el dueño. |
 
 No publiques `.env.local`, credenciales ni valores secretos en el repositorio. No agregues el prefijo `NEXT_PUBLIC_` a `DATABASE_URL` ni a las claves de Resend: las variables con ese prefijo se exponen al navegador. `.env.example` contiene los nombres de las variables sin valores.
 
 ## Formulario y base de datos
 
-`POST /api/contact` valida los campos recibidos y comprueba que el honeypot esté vacío. Para procesar una solicitud deben estar configurados `DATABASE_URL`, `RESEND_API_KEY`, `CONTACT_TO_EMAIL` y `CONTACT_FROM_EMAIL`.
+`POST /api/contact` valida los campos recibidos y comprueba que el honeypot esté vacío. Con `DATABASE_URL`, guarda la solicitud aunque Resend no esté configurado; en ese caso responde que la notificación está pendiente. Si Resend está listo, programa el correo tras responder y actualiza `email_sent` cuando se envía. El endpoint limita a cinco las solicitudes por hash de IP en una hora.
 
 La API registra la solicitud en `quote_requests` y después intenta enviar el correo. Si el registro falla, devuelve un error y no indica que la solicitud se guardó. Si el registro fue exitoso pero falla la notificación, la solicitud permanece guardada y la respuesta informa que el correo está pendiente; no es necesario enviar el formulario otra vez.
 
@@ -106,15 +108,19 @@ public/                  Imágenes, logos e iconos
 
 ## Despliegue
 
-El proyecto puede desplegarse en Vercel con la configuración de Next.js:
+El proyecto puede desplegarse en Vercel con la configuración de Next.js y su optimizador integrado de imágenes:
 
-1. Configura las cinco variables de entorno en el entorno de despliegue. Usa las credenciales de producción para PostgreSQL y Resend.
+1. Configura las variables de entorno en el entorno de despliegue. `DATABASE_URL` permite guardar solicitudes; `IP_HASH_SALT` debe ser un secreto aleatorio largo. Las tres variables de Resend activan las notificaciones por correo.
 2. Verifica el dominio del remitente en Resend y confirma que `CONTACT_TO_EMAIL` sea la dirección deseada.
 3. Define `NEXT_PUBLIC_SITE_URL` con el dominio público definitivo. Sin esta variable, el sitemap queda vacío y el archivo robots bloquea la indexación.
 4. Aplica `db/schema.sql` una vez contra la base de datos de producción, ejecutando `npm run db:setup` desde un entorno con acceso a ella. El comando lee `.env.local`; también se pueden suministrar las variables desde el entorno de ejecución.
 5. Ejecuta `npm run build` y despliega la aplicación.
 
-El endpoint de contacto y el acceso a PostgreSQL usan runtime Node.js. `images.unoptimized` está habilitado en `next.config.mjs`; se puede revisar si el entorno de despliegue admite el optimizador de imágenes de Next.js.
+El endpoint de contacto y el acceso a PostgreSQL usan runtime Node.js. Las imágenes optimizadas se sirven con el optimizador de Next.js de Vercel.
+
+## Imágenes y contenido pendiente
+
+`npm run images:optimize` convierte PNG de logos, galería y hero a WebP y mueve los originales a `assets-src/images/`. Los placeholders se conservan en `public/` pero no se muestran. Para ocultar el contenido comercial no verificado, deja `NEXT_PUBLIC_SHOW_UNVERIFIED_CONTENT=false` (predeterminado); cambia a `true` únicamente después de obtener confirmación del dueño.
 
 ## Antes de publicar
 

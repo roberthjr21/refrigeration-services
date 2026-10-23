@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -21,12 +21,15 @@ export function ContactSection() {
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
-    defaultValues: { name: "", company: "", email: "", phone: "", subject: "", message: "", website: "" },
+    defaultValues: { name: "", company: "", email: "", phone: "", subject: "", message: "", website: "", serviceSlug: undefined },
   })
 
   useEffect(() => {
-    const requestedService = new URLSearchParams(window.location.search).get("servicio")
-    if (requestedService) setValue("subject", `Información sobre: ${requestedService}`)
+    const requestedService = new URLSearchParams(window.location.search).get("serviceSlug")
+    if (requestedService) {
+      setValue("serviceSlug", requestedService)
+      setValue("subject", `Información sobre: ${requestedService.replaceAll("-", " ")}`)
+    }
   }, [setValue])
 
   const onSubmit = async (values: ContactFormValues) => {
@@ -64,6 +67,7 @@ export function ContactSection() {
             <CardHeader><CardTitle>Solicita tu Cotización</CardTitle></CardHeader>
             <CardContent>
               <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+                <input type="hidden" {...register("serviceSlug")} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="contact-name">Nombre completo *</label>

@@ -1,4 +1,4 @@
-﻿export const siteConfig = {
+export const siteConfig = {
   companyName: "GP Seguros en Refrigeración",
   // TODO: reemplazar por el dominio oficial antes del despliegue público.
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://example.com",
@@ -18,7 +18,7 @@
     instagram: null as string | null,
     linkedin: null as string | null,
   },
-  showUnverifiedContent: true,
+  showUnverifiedContent: process.env.NEXT_PUBLIC_SHOW_UNVERIFIED_CONTENT === "true",
   // TODO: verificar con el dueño las cifras antes de publicarlas.
   stats: [
     { label: "Años de Experiencia", value: "15+" },
@@ -28,11 +28,11 @@
   ],
   // TODO: verificar con el dueño los nombres y permisos de uso de logos.
   clients: [
-    { name: "Inducol", logo: "/inducol-logo-industrial.png" },
-    { name: "Wonder", logo: "/wonder-food-logo.png" },
-    { name: "Agrosavia", logo: "/agrosavia-logo.png" },
-    { name: "Freskaleche", logo: "/freskaleche-logo.png" },
-    { name: "Lácteos del Valle", logo: "/lacteos-del-valle-logo.png" },
+    { name: "Inducol", logo: "/inducol-logo-industrial.webp" },
+    { name: "Wonder", logo: "/wonder-food-logo.webp" },
+    { name: "Agrosavia", logo: "/agrosavia-logo.webp" },
+    { name: "Freskaleche", logo: "/freskaleche-logo.webp" },
+    { name: "Lácteos del Valle", logo: "/lacteos-del-valle-logo.webp" },
   ],
   // TODO: verificar con el dueño el texto y permiso para publicar el testimonio.
   testimonial: {

@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -94,8 +94,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Open Sans", system-ui, -apple-system, sans-serif;
-  --font-serif: "Montserrat", Georgia, serif;
+  --font-sans: var(--font-open-sans), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-montserrat), Georgia, serif;
 }
 
 @layer base {

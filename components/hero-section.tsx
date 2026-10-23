@@ -1,17 +1,14 @@
-﻿import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Shield, Wrench, Clock } from "lucide-react"
+import Image from "next/image"
 
 export function HeroSection() {
   return (
     <section id="inicio" className="scroll-mt-20 relative min-h-screen flex items-center">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('/industrial-refrigeration-worker.png')`,
-        }}
-      >
-        <div className="absolute inset-0 bg-primary/70"></div>
+      <div className="absolute inset-0">
+        <Image src="/industrial-refrigeration-worker.webp" alt="" fill priority sizes="100vw" quality={70} className="object-cover object-center" />
+        <div className="absolute inset-0 bg-primary/70" />
       </div>
 
       {/* Content */}

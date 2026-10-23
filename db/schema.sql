@@ -1,4 +1,4 @@
-﻿-- Esquema PostgreSQL para refrigeration-services (PostgreSQL 13+).
+-- Esquema PostgreSQL para refrigeration-services (PostgreSQL 13+).
 -- Aplicar con: npm run db:setup
 
 CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger AS $$

@@ -1,4 +1,4 @@
-﻿import { Pool } from "pg"
+import { Pool } from "pg"
 
 const globalForPostgres = globalThis as typeof globalThis & { quoteDatabasePool?: Pool }
 

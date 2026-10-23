@@ -1,4 +1,4 @@
-﻿import { Facebook, Instagram, Linkedin, Phone, Mail } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Phone, Mail } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
 
 const socialItems = [

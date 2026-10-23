@@ -1,4 +1,4 @@
-﻿import { z } from "zod"
+import { z } from "zod"
 
 export const contactSchema = z.object({
   name: z.string().trim().min(2, "Escribe tu nombre completo.").max(120, "El nombre es demasiado largo."),
@@ -8,6 +8,7 @@ export const contactSchema = z.object({
   subject: z.string().trim().min(2, "Escribe el asunto de tu solicitud.").max(160, "El asunto es demasiado largo."),
   message: z.string().trim().min(10, "Cuéntanos un poco más (mínimo 10 caracteres).").max(5000, "El mensaje es demasiado largo."),
   website: z.string().max(120, "Solicitud inválida."),
+  serviceSlug: z.string().max(100).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Selecciona un servicio válido.").optional(),
 })
 
 export type ContactFormValues = z.infer<typeof contactSchema>

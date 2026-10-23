@@ -1,4 +1,4 @@
-﻿import { Pool } from "pg"
+import { Pool } from "pg"
 import pkg from "@next/env"
 const { loadEnvConfig } = pkg
 

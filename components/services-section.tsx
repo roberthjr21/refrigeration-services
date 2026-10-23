@@ -5,36 +5,42 @@ import { Wrench, Settings, Thermometer, Zap, Shield, Clock } from "lucide-react"
 export function ServicesSection() {
   const services = [
     {
+      slug: "mantenimiento-preventivo",
       icon: Wrench,
       title: "Mantenimiento Preventivo",
       description: "Programas de mantenimiento diseñados para prevenir fallas y extender la vida útil de tus equipos.",
       features: ["Inspecciones regulares", "Limpieza especializada", "Calibración de sistemas"],
     },
     {
+      slug: "reparacion-de-equipos",
       icon: Settings,
       title: "Reparación de Equipos",
       description: "Diagnóstico y reparación especializada de todo tipo de sistemas de refrigeración industrial.",
       features: ["Diagnóstico preciso", "Repuestos originales", "Garantía en reparaciones"],
     },
     {
+      slug: "instalacion-de-sistemas",
       icon: Thermometer,
       title: "Instalación de Sistemas",
       description: "Instalación profesional de nuevos sistemas de refrigeración adaptados a tus necesidades.",
       features: ["Diseño personalizado", "Instalación certificada", "Puesta en marcha"],
     },
     {
+      slug: "emergencias-24-7",
       icon: Zap,
       title: "Emergencias 24/7",
       description: "Servicio de emergencia disponible las 24 horas para atender fallas críticas.",
       features: ["Respuesta inmediata", "Técnicos disponibles", "Soluciones rápidas"],
     },
     {
+      slug: "certificaciones",
       icon: Shield,
       title: "Certificaciones",
       description: "Certificaciones y documentación técnica para cumplimiento normativo.",
       features: ["Certificados oficiales", "Documentación técnica", "Cumplimiento normativo"],
     },
     {
+      slug: "modernizacion",
       icon: Clock,
       title: "Modernización",
       description: "Actualización de sistemas obsoletos con tecnología moderna y eficiente.",
@@ -72,7 +78,7 @@ export function ServicesSection() {
                   ))}
                 </ul>
                 <Button asChild variant="outline" className="w-full bg-transparent">
-                  <a href={`/?servicio=${encodeURIComponent(service.title)}#contacto`}>Más Información</a>
+                  <a href={`/?serviceSlug=${encodeURIComponent(service.slug)}#contacto`}>Más Información</a>
                 </Button>
               </CardContent>
             </Card>

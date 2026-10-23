@@ -1,4 +1,4 @@
-﻿import Image from "next/image"
+import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { siteConfig } from "@/lib/site-config"
 

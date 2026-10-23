@@ -1,4 +1,4 @@
-﻿import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Users, Award, Calendar, MapPin } from "lucide-react"
 import Image from "next/image"
@@ -6,11 +6,13 @@ import { siteConfig } from "@/lib/site-config"
 
 export function AboutSection() {
   const statIcons = [Calendar, Users, Award, MapPin]
+  // TODO: replace with an authorized real company photo before displaying this block.
+  const aboutPhoto = { src: "/placeholder-81nir.png", isReal: false }
 
   return (
     <section id="nosotros" className="scroll-mt-20 py-20">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className={aboutPhoto.isReal ? "grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" : "grid grid-cols-1 gap-12 items-center"}>
           {/* Content */}
           <div>
             <Badge variant="secondary" className="mb-4">
@@ -48,11 +50,11 @@ export function AboutSection() {
           </div>
 
           {/* Image */}
-          <div className="relative">
+          {aboutPhoto.isReal && <div className="relative">
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <Image
-                  src="/placeholder-81nir.png"
+                  src={aboutPhoto.src}
                   alt="Técnico trabajando en equipo de refrigeración"
                   width={800}
                   height={1000}
@@ -70,7 +72,7 @@ export function AboutSection() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div>}
         </div>
       </div>
     </section>
