@@ -43,7 +43,7 @@ export function ServicesSection() {
   ]
 
   return (
-    <section id="servicios" className="py-20 bg-muted">
+    <section id="servicios" className="scroll-mt-20 py-20 bg-muted">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">Nuestros Servicios</h2>
@@ -71,8 +71,8 @@ export function ServicesSection() {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" className="w-full bg-transparent">
-                  Más Información
+                <Button asChild variant="outline" className="w-full bg-transparent">
+                  <a href={`/?servicio=${encodeURIComponent(service.title)}#contacto`}>Más Información</a>
                 </Button>
               </CardContent>
             </Card>

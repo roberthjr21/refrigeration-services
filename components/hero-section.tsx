@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
+﻿import { Button } from "@/components/ui/button"
 import { Shield, Wrench, Clock } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center">
+    <section id="inicio" className="scroll-mt-20 relative min-h-screen flex items-center">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -22,21 +22,18 @@ export function HeroSection() {
             <span className="block text-accent">a Tu Alcance</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 max-w-2xl leading-relaxed">
-            Especialistas en mantenimiento y reparación de equipos de refrigeración industrial. Más de 15 años
-            garantizando el funcionamiento óptimo de tus sistemas.
-          </p>
+          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 max-w-2xl leading-relaxed">Especialistas en mantenimiento y reparación de equipos de refrigeración industrial. Garantizamos el funcionamiento óptimo de tus sistemas.</p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              Solicitar Cotización
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <a href="#contacto">Solicitar CotizaciÃ³n</a>
             </Button>
-            <Button
+            <Button asChild
               size="lg"
               variant="outline"
               className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
             >
-              Ver Servicios
+              <a href="#servicios">Ver Servicios</a>
             </Button>
           </div>
 
@@ -45,7 +42,7 @@ export function HeroSection() {
             <div className="flex items-center space-x-3 text-primary-foreground">
               <Shield className="w-8 h-8 text-accent" />
               <div>
-                <div className="font-semibold">Garantía Total</div>
+                <div className="font-semibold">GarantÃ­a Total</div>
                 <div className="text-sm opacity-90">En todos nuestros trabajos</div>
               </div>
             </div>
@@ -59,7 +56,7 @@ export function HeroSection() {
             <div className="flex items-center space-x-3 text-primary-foreground">
               <Wrench className="w-8 h-8 text-accent" />
               <div>
-                <div className="font-semibold">Técnicos Certificados</div>
+                <div className="font-semibold">TÃ©cnicos Certificados</div>
                 <div className="text-sm opacity-90">Personal especializado</div>
               </div>
             </div>

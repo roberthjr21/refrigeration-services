@@ -1,78 +1,46 @@
-﻿REVISION DEL PRO PROYECTO: refrigeration-services
+﻿REVISIÓN DEL PROYECTO: refrigeration-services
 Fecha: 23/10/2026
-Alcance: revisión estática de los archivos fuente y configuración. No se ejecutaron pruebas ni compilación.
 
 RESUMEN
-El proyecto contiene una página de presentación de servicios en Next.js/React. Los principales pendientes están en funciones visibles para el visitante: el formulario y varios botones no realizan ninguna acción. También hay indicios de texto con codificación dañada, enlaces de contacto inconsistentes y configuración que oculta errores de TypeScript.
+Landing de una sola ruta con Next.js. Esta nota refleja cambios aplicados en el código y pendientes que no se pudieron comprobar por limitaciones del entorno. No se ejecutaron las validaciones finales de dependencias: el acceso a registry.npmjs.org devuelve EACCES. El directorio .git permite lectura pero el entorno impide escribir su índice, así que no se pudieron crear commits.
 
-HALLAZGOS PRIORIZADOS
+HALLAZGOS Y ESTADO
 
-1. CRÍTICO — El formulario de contacto no envía solicitudes
-Archivo: components/contact-section.tsx
-Los campos no tienen etiquetas asociadas, nombres para enviar ni validación. No están dentro de un formulario con manejador y el botón “Enviar Solicitud” no tiene acción. El visitante puede llenar los campos, pero la empresa no recibe la solicitud.
-Arreglo: definir cómo se procesarán los mensajes (API/backend, servicio de formularios o enlace de correo), agregar <form>, nombres, etiquetas, campos obligatorios, validación y estados de éxito/error. No dejar la entrega de mensajes simulada.
+1. Formulario de contacto no funcional — RESUELTO EN CÓDIGO, PENDIENTE DE CREDENCIALES
+components/contact-section.tsx usa react-hook-form y zod, campos con etiquetas, errores en español, honeypot y estados visibles. app/api/contact/route.ts valida y envía con Resend. Si faltan variables, devuelve 503 con mensaje. Falta configurar y probar las variables reales RESEND_API_KEY, CONTACT_TO_EMAIL y CONTACT_FROM_EMAIL.
 
-2. ALTO — Botones de cotización, servicios y más información no hacen nada
-Archivos: components/header.tsx, components/hero-section.tsx, components/services-section.tsx
-Los botones “Cotizar”, “Solicitar Cotización”, “Ver Servicios” y “Más Información” no tienen href ni manejador. Parecen interactivos, pero no navegan ni ejecutan una acción.
-Arreglo: enlazar cotización a #contacto o a un canal de contacto real; “Ver Servicios” a #servicios. Para “Más Información”, implementar el destino esperado o quitar el botón si no existe información adicional.
+2. Botones sin destino — RESUELTO EN CÓDIGO
+Cotizar/solicitar cotización navegan a #contacto; Ver Servicios navega a #servicios; Más Información envía el nombre del servicio como asunto; se retiró Ver Detalles de la galería. Se reemplazaron enlaces vacíos del pie de página.
 
-3. ALTO — La compilación ignora errores de TypeScript
-Archivo: next.config.mjs
-La opción typescript.ignoreBuildErrors está en true; Next puede terminar la compilación aunque haya errores de tipos.
-Arreglo: quitar esa opción y corregir los errores de TypeScript que aparezcan al compilar.
+3. TypeScript ignorado durante la compilación — RESUELTO EN CONFIGURACIÓN
+Se quitó typescript.ignoreBuildErrors y se agregó configuración ESLint. No se pudo validar la compilación por la falta de instalación de dependencias.
 
-4. ALTO — Textos con caracteres posiblemente dañados (mojibake)
-Archivos: app/layout.tsx y la mayoría de components/*.tsx
-En la lectura aparecen palabras como “refrigeraciÃ³n”, “MÃ¡s” y “UbicaciÃ³n”. Si esos caracteres están así en los archivos, el sitio mostrará texto incorrecto.
-Arreglo: guardar los archivos como UTF-8 y reemplazar esos textos por sus caracteres correctos (por ejemplo, “refrigeración”, “Más”, “Ubicación”). Verificar en navegador porque la salida de consola también puede alterar la codificación.
+4. Supuesto texto con caracteres dañados — HALLAZGO CORREGIDO
+No hay mojibake: los archivos están en UTF-8 y deben conservarse los caracteres españoles (á, é, ñ). La observación original fue incorrecta; no se deben reemplazar esos caracteres.
 
-5. ALTO — Datos de contacto no coinciden y no son accionables
-Archivos: components/contact-section.tsx, components/footer.tsx
-El correo de contacto es contacto@gpsegurosrefrigeracion.com en una sección y contacto@gpseguros.com en el pie de página. Los teléfonos y correo aparecen como texto sin enlaces tel: o mailto:.
-Arreglo: confirmar el correo oficial, usar el mismo en todo el sitio y convertir teléfonos/correo en enlaces tocables.
+5. Datos de contacto inconsistentes — RESUELTO CON VALOR PROVISIONAL
+Los datos compartidos se centralizaron en lib/site-config.ts. El correo quedó como contacto@gpsegurosrefrigeracion.com, marcado TODO para confirmar con el dueño. Teléfonos, WhatsApp y correo usan enlaces tel:, wa.me y mailto:.
 
-6. MEDIO — Enlaces vacíos y redes sociales sin destino
-Archivo: components/footer.tsx
-Varios enlaces usan href="#" (al hacer clic regresan al inicio) y los iconos de Facebook, Instagram y LinkedIn son elementos visuales sin enlace. Esto da navegación engañosa y no permite llegar a los perfiles.
-Arreglo: asignar destinos reales y accesibles o mostrar esos elementos como texto no interactivo hasta tener URL.
+6. Redes/enlaces sin destino — RESUELTO EN CÓDIGO
+El pie de página no muestra redes sociales sin URL. Sus enlaces apuntan a secciones existentes.
 
-7. MEDIO — Imagen y logos provisionales en contenido publicado
-Archivos: components/about-section.tsx, components/gallery-section.tsx, components/clients-section.tsx
-La sección “Nosotros” y varias imágenes de galería usan archivos placeholder. La lista de clientes incluye un logo genérico para “Industrias Alimentarias”.
-Arreglo: reemplazar placeholders con fotos/logos autorizados y reales, o retirar esos elementos. Confirmar que los nombres y testimonios publicados tengan autorización y sean correctos.
+7. Imágenes provisionales — PENDIENTE DE FOTOS REALES
+Aún hay placeholders en about-section: public/placeholder-81nir.png. La galería conserva cuatro placeholders: public/placeholder-0a56a.png, public/placeholder-4xaaf.png, public/placeholder-erzsy.png y public/placeholder-358ih.png. Sustituirlos cuando se reciban fotos reales autorizadas.
 
-8. MEDIO — Accesibilidad incompleta en controles
-Archivos: components/header.tsx, components/gallery-section.tsx, components/contact-section.tsx
-El botón del menú móvil y los puntos de paginación no tienen nombre accesible; los campos del formulario se identifican solo mediante placeholder, que no reemplaza una etiqueta. Los botones de navegación de galería tampoco describen su propósito a lectores de pantalla.
-Arreglo: añadir aria-label/aria-expanded al menú, nombres accesibles a controles de galería y etiquetas visibles asociadas a cada campo.
+8. Accesibilidad — MEJORADO EN CÓDIGO
+El menú móvil tiene aria-label, aria-expanded y aria-controls. El formulario tiene etiquetas asociadas y mensajes de error conectados. La galería tiene nombres accesibles en sus controles y presenta 1/2/4 elementos según ancho de pantalla.
 
-9. MEDIO — Imágenes insertadas con <img> en Next.js
-Archivos: components/about-section.tsx, components/gallery-section.tsx, components/clients-section.tsx
-Se usa <img> directamente, lo que puede generar avisos de Next y no aprovecha optimización ni carga diferida integrada.
-Arreglo: considerar next/image con dimensiones o fill y tamaños adecuados. Si se mantiene <img>, justificarlo y asegurar dimensiones para reducir saltos de diseño.
+9. Imágenes Next.js — RESUELTO EN CÓDIGO
+Las imágenes de Nosotros, galería y clientes usan next/image con dimensiones y tamaños. El hero conserva background-image. images.unoptimized se mantiene hasta confirmar el soporte del despliegue.
 
-10. BAJO — Hojas de estilos globales duplicadas
-Archivos: app/globals.css, styles/globals.css
-Ambas definen tokens y estilos globales distintos, pero layout importa únicamente app/globals.css. La otra hoja parece residuo de una plantilla y puede confundir futuros cambios.
-Arreglo: confirmar si styles/globals.css se usa; si no, eliminarla o documentar su propósito. Evitar mantener dos fuentes de estilos globales.
+10. Archivos y componentes duplicados/sin uso — RESUELTO EN CÓDIGO
+Se quitó styles/globals.css, archivos UI no usados, hooks de plantilla, tema/toast no usados y dependencias sin referencias aparentes. Se borraron placeholders sin referencias y se conservaron los cinco placeholders aún utilizados.
 
-11. BAJO — Metadatos incompletos o de plantilla
-Archivo: app/layout.tsx
-El título/descripción deben revisarse por caracteres dañados y la metadata incluye generator: “v0.app”. No se definen datos sociales básicos como Open Graph.
-Arreglo: corregir título/descripción, quitar la marca de plantilla si no corresponde y completar metadata para compartir la página.
+11. Metadata y SEO — RESUELTO EN CÓDIGO, URL PENDIENTE
+Se agregaron metadataBase, Open Graph, tarjeta Twitter, iconos, robots.ts y sitemap.ts. lib/site-config.ts usa example.com como valor de reserva y robots/sitemap no permiten indexación cuando NEXT_PUBLIC_SITE_URL no está configurada. Reemplazar por la URL oficial antes de publicar.
 
-12. BAJO — Año de derechos de autor está fijo en 2024
-Archivo: components/footer.tsx
-El pie de página muestra un año fijo que puede quedar desactualizado.
-Arreglo: actualizarlo anualmente o calcular el año actual en el servidor.
+12. Año fijo de copyright — RESUELTO
+El footer calcula el año actual con new Date().getFullYear().
 
-ORDEN RECOMENDADO
-1) Confirmar datos de contacto y mecanismo real de recepción de mensajes.
-2) Hacer funcionales los botones principales y enlaces.
-3) Corregir codificación y reemplazar contenido provisional.
-4) Quitar la supresión de errores TypeScript y compilar para identificar errores reales.
-5) Mejorar accesibilidad, imágenes y metadata.
-
-NOTA
-Esta revisión identifica problemas a partir del código inspeccionado. No confirma el comportamiento en producción, disponibilidad de dominios/correos ni la validez de afirmaciones comerciales como “15+ años”, cifras de clientes o certificaciones.
+SEGURIDAD / DEPENDENCIAS
+Se configuró Next.js 15.5.28, que corresponde al último parche 15.5.x encontrado al revisar npm el 23/10/2026. Se agregaron overrides para postcss 8.5.31 y sharp 0.35.5 y configuración de ESLint. El stub pnpm-lock.yaml se eliminó. No se pudo generar package-lock.json ni ejecutar npm audit porque el acceso al registro npm está bloqueado por EACCES; no debe considerarse verificada la resolución del audit hasta generar el lockfile con npm install y ejecutar npm audit --omit=dev.
