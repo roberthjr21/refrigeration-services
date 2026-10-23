@@ -26,7 +26,7 @@ export function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <a href="#contacto">Solicitar CotizaciÃ³n</a>
+              <a href="#contacto">Solicitar Cotización</a>
             </Button>
             <Button asChild
               size="lg"
@@ -42,7 +42,7 @@ export function HeroSection() {
             <div className="flex items-center space-x-3 text-primary-foreground">
               <Shield className="w-8 h-8 text-accent" />
               <div>
-                <div className="font-semibold">GarantÃ­a Total</div>
+                <div className="font-semibold">Garantía Total</div>
                 <div className="text-sm opacity-90">En todos nuestros trabajos</div>
               </div>
             </div>
@@ -56,7 +56,7 @@ export function HeroSection() {
             <div className="flex items-center space-x-3 text-primary-foreground">
               <Wrench className="w-8 h-8 text-accent" />
               <div>
-                <div className="font-semibold">TÃ©cnicos Certificados</div>
+                <div className="font-semibold">Técnicos Certificados</div>
                 <div className="text-sm opacity-90">Personal especializado</div>
               </div>
             </div>

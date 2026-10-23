@@ -1,7 +1,7 @@
 ﻿export const siteConfig = {
   companyName: "GP Seguros en Refrigeración",
   // TODO: reemplazar por el dominio oficial antes del despliegue público.
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://example.com",
   contact: {
     phones: [
       { display: "(+57) 316 5371453", tel: "+573165371453", whatsapp: "573165371453" },

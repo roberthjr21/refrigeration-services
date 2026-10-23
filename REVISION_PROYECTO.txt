@@ -1,46 +1,30 @@
-﻿REVISIÓN DEL PROYECTO: refrigeration-services
+﻿REVISIÓN ACTUAL DEL PROYECTO: refrigeration-services
 Fecha: 23/10/2026
 
-RESUMEN
-Landing de una sola ruta con Next.js. Esta nota refleja cambios aplicados en el código y pendientes que no se pudieron comprobar por limitaciones del entorno. No se ejecutaron las validaciones finales de dependencias: el acceso a registry.npmjs.org devuelve EACCES. El directorio .git permite lectura pero el entorno impide escribir su índice, así que no se pudieron crear commits.
+CAMBIOS VERIFICADOS ANTES DE LA INTEGRACIÓN POSTGRESQL
+- npm install, npx tsc --noEmit, npm run lint y npm run build pasaron antes de añadir pg.
+- El dueño reportó que npm audit --omit=dev encontró 0 vulnerabilidades en ese árbol anterior.
+- El formulario sin variables de Resend respondió HTTP 503 de forma clara.
+- El texto con secuencias de codificación dañadas se corrigió en el header, hero y sección Nosotros.
 
-HALLAZGOS Y ESTADO
+INTEGRACIÓN POSTGRESQL AÑADIDA
+- db/schema.sql define tablas de servicios, solicitudes, galería, clientes, testimonios y ajustes, índices y triggers de updated_at. Los inserts de semilla y el esquema están preparados para volver a ejecutarse sin duplicar filas.
+- lib/db.ts crea un pool PostgreSQL de servidor usando DATABASE_URL.
+- app/api/contact/route.ts valida y guarda las solicitudes en quote_requests; después envía la notificación con Resend y marca email_sent cuando el correo sale correctamente.
+- scripts/setup-db.mjs carga .env.local y ejecuta el esquema; npm run db:setup aplica la migración.
+- Las tablas de contenido están creadas y con semillas para servicios, clientes y ajustes. La web aún muestra el contenido visual desde el código; solo las solicitudes de contacto están conectadas a escritura PostgreSQL.
 
-1. Formulario de contacto no funcional — RESUELTO EN CÓDIGO, PENDIENTE DE CREDENCIALES
-components/contact-section.tsx usa react-hook-form y zod, campos con etiquetas, errores en español, honeypot y estados visibles. app/api/contact/route.ts valida y envía con Resend. Si faltan variables, devuelve 503 con mensaje. Falta configurar y probar las variables reales RESEND_API_KEY, CONTACT_TO_EMAIL y CONTACT_FROM_EMAIL.
+ESTADO DE VERIFICACIÓN DE POSTGRESQL
+No se pudo descargar pg ni @types/pg desde este entorno: npm install devuelve EACCES al acceder a registry.npmjs.org. package.json ya declara ambas dependencias, pero package-lock.json aún requiere actualización en un terminal con acceso al registro. Por eso, después del cambio, lint pasa pero tsc y build fallan con “Cannot find module 'pg'”.
 
-2. Botones sin destino — RESUELTO EN CÓDIGO
-Cotizar/solicitar cotización navegan a #contacto; Ver Servicios navega a #servicios; Más Información envía el nombre del servicio como asunto; se retiró Ver Detalles de la galería. Se reemplazaron enlaces vacíos del pie de página.
+Tampoco hay psql/PostgreSQL local ni DATABASE_URL configurada en este entorno. La conexión real y la ejecución de db/schema.sql quedan pendientes de instalar dependencias, colocar una URL de conexión en .env.local y correr npm run db:setup.
 
-3. TypeScript ignorado durante la compilación — RESUELTO EN CONFIGURACIÓN
-Se quitó typescript.ignoreBuildErrors y se agregó configuración ESLint. No se pudo validar la compilación por la falta de instalación de dependencias.
-
-4. Supuesto texto con caracteres dañados — HALLAZGO CORREGIDO
-No hay mojibake: los archivos están en UTF-8 y deben conservarse los caracteres españoles (á, é, ñ). La observación original fue incorrecta; no se deben reemplazar esos caracteres.
-
-5. Datos de contacto inconsistentes — RESUELTO CON VALOR PROVISIONAL
-Los datos compartidos se centralizaron en lib/site-config.ts. El correo quedó como contacto@gpsegurosrefrigeracion.com, marcado TODO para confirmar con el dueño. Teléfonos, WhatsApp y correo usan enlaces tel:, wa.me y mailto:.
-
-6. Redes/enlaces sin destino — RESUELTO EN CÓDIGO
-El pie de página no muestra redes sociales sin URL. Sus enlaces apuntan a secciones existentes.
-
-7. Imágenes provisionales — PENDIENTE DE FOTOS REALES
-Aún hay placeholders en about-section: public/placeholder-81nir.png. La galería conserva cuatro placeholders: public/placeholder-0a56a.png, public/placeholder-4xaaf.png, public/placeholder-erzsy.png y public/placeholder-358ih.png. Sustituirlos cuando se reciban fotos reales autorizadas.
-
-8. Accesibilidad — MEJORADO EN CÓDIGO
-El menú móvil tiene aria-label, aria-expanded y aria-controls. El formulario tiene etiquetas asociadas y mensajes de error conectados. La galería tiene nombres accesibles en sus controles y presenta 1/2/4 elementos según ancho de pantalla.
-
-9. Imágenes Next.js — RESUELTO EN CÓDIGO
-Las imágenes de Nosotros, galería y clientes usan next/image con dimensiones y tamaños. El hero conserva background-image. images.unoptimized se mantiene hasta confirmar el soporte del despliegue.
-
-10. Archivos y componentes duplicados/sin uso — RESUELTO EN CÓDIGO
-Se quitó styles/globals.css, archivos UI no usados, hooks de plantilla, tema/toast no usados y dependencias sin referencias aparentes. Se borraron placeholders sin referencias y se conservaron los cinco placeholders aún utilizados.
-
-11. Metadata y SEO — RESUELTO EN CÓDIGO, URL PENDIENTE
-Se agregaron metadataBase, Open Graph, tarjeta Twitter, iconos, robots.ts y sitemap.ts. lib/site-config.ts usa example.com como valor de reserva y robots/sitemap no permiten indexación cuando NEXT_PUBLIC_SITE_URL no está configurada. Reemplazar por la URL oficial antes de publicar.
-
-12. Año fijo de copyright — RESUELTO
-El footer calcula el año actual con new Date().getFullYear().
-
-SEGURIDAD / DEPENDENCIAS
-Se configuró Next.js 15.5.28, que corresponde al último parche 15.5.x encontrado al revisar npm el 23/10/2026. Se agregaron overrides para postcss 8.5.31 y sharp 0.35.5 y configuración de ESLint. El stub pnpm-lock.yaml se eliminó. No se pudo generar package-lock.json ni ejecutar npm audit porque el acceso al registro npm está bloqueado por EACCES; no debe considerarse verificada la resolución del audit hasta generar el lockfile con npm install y ejecutar npm audit --omit=dev.
+PENDIENTES DE CONTENIDO Y DESPLIEGUE
+- showUnverifiedContent está en true: las cifras, logos y el testimonio siguen visibles hasta que el dueño los confirme.
+- “100% de garantía” y “Técnicos Certificados” siguen visibles y requieren confirmación del dueño.
+- Siguen cinco imágenes provisionales: public/placeholder-81nir.png en Nosotros y public/placeholder-0a56a.png, public/placeholder-4xaaf.png, public/placeholder-erzsy.png y public/placeholder-358ih.png en la galería.
+- Confirmar el correo oficial, redes sociales, cifras, testimonio, logos y fotos.
+- Configurar RESEND_API_KEY, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL y DATABASE_URL.
+- Reemplazar NEXT_PUBLIC_SITE_URL y el fallback example.com por el dominio oficial antes de publicar.
+- images.unoptimized sigue activado hasta confirmar soporte del entorno de despliegue.
+- Repetir npm audit --omit=dev tras regenerar el lockfile con las dependencias de PostgreSQL.

@@ -12,7 +12,7 @@ export function Header() {
     { name: "Inicio", href: "#inicio" },
     { name: "Servicios", href: "#servicios" },
     { name: "Nosotros", href: "#nosotros" },
-    { name: "GalerÃ­a", href: "#galeria" },
+    { name: "Galería", href: "#galeria" },
     { name: "Contacto", href: "#contacto" },
   ]
 
@@ -27,7 +27,7 @@ export function Header() {
             </div>
             <div className="text-primary-foreground">
             <div className="font-bold text-lg">GP Seguros</div>
-              <div className="text-xs opacity-90">RefrigeraciÃ³n</div>
+              <div className="text-xs opacity-90">Refrigeración</div>
             </div>
           </div>
 
@@ -62,7 +62,7 @@ export function Header() {
             type="button"
             className="md:hidden text-primary-foreground"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Cerrar menÃº" : "Abrir menÃº"}
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
           >

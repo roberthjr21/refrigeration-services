@@ -16,16 +16,16 @@ export function AboutSection() {
             <Badge variant="secondary" className="mb-4">
               Sobre Nosotros
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-6">Tus Equipos QuedarÃ¡n Como Nuevos</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground mb-6">Tus Equipos Quedarán Como Nuevos</h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>Somos una empresa especializada en el mantenimiento, reparación y modernización de equipos de refrigeración industrial.</p>
               <p>
-                Nuestro equipo de tÃ©cnicos certificados utiliza las mejores prÃ¡cticas y tecnologÃ­a de punta para
-                garantizar el funcionamiento Ã³ptimo de tus sistemas de refrigeraciÃ³n.
+                Nuestro equipo de técnicos certificados utiliza las mejores prácticas y tecnología de punta para
+                garantizar el funcionamiento óptimo de tus sistemas de refrigeración.
               </p>
               <p>
                 Nos comprometemos a brindar soluciones integrales que no solo resuelvan problemas inmediatos, sino que
-                tambiÃ©n prevengan futuras fallas y optimicen el rendimiento de tus equipos.
+                también prevengan futuras fallas y optimicen el rendimiento de tus equipos.
               </p>
             </div>
 
@@ -53,7 +53,7 @@ export function AboutSection() {
               <CardContent className="p-0">
                 <Image
                   src="/placeholder-81nir.png"
-                  alt="TÃ©cnico trabajando en equipo de refrigeraciÃ³n"
+                  alt="Técnico trabajando en equipo de refrigeración"
                   width={800}
                   height={1000}
                   className="w-full h-[500px] object-cover"
@@ -66,7 +66,7 @@ export function AboutSection() {
               <CardContent className="p-0">
                 <div className="text-3xl font-bold mb-2">100%</div>
                 <div className="text-sm opacity-90">
-                  GarantÃ­a en todos nuestros servicios de mantenimiento y reparaciÃ³n
+                  Garantía en todos nuestros servicios de mantenimiento y reparación
                 </div>
               </CardContent>
             </Card>
