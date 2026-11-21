@@ -35,7 +35,7 @@ Sitio web de una sola página para presentar los servicios de refrigeración ind
    Copy-Item .env.example .env.local
    ```
 
-2. Completa las variables de `.env.local` según la tabla siguiente. Para ejecutar el formulario se necesitan PostgreSQL y Resend; la aplicación puede iniciarse sin ellos, pero no podrá aceptar solicitudes.
+2. Completa las variables de `.env.local` según la tabla siguiente. Sin PostgreSQL, el formulario prepara la cotización en WhatsApp para que el cliente confirme el envío. Configura PostgreSQL para registrar solicitudes desde la web y Resend si deseas recibir avisos por correo.
 
 3. Crea el esquema y los datos iniciales:
 
@@ -68,6 +68,8 @@ Sitio web de una sola página para presentar los servicios de refrigeración ind
 No publiques `.env.local`, credenciales ni valores secretos en el repositorio. No agregues el prefijo `NEXT_PUBLIC_` a `DATABASE_URL` ni a las claves de Resend: las variables con ese prefijo se exponen al navegador. `.env.example` contiene los nombres de las variables sin valores.
 
 ## Formulario y base de datos
+
+El formulario usa el primer número de WhatsApp de `lib/site-config.ts` cuando no hay base configurada. Si falla la conexión durante un envío web, conserva los campos y ofrece continuar por WhatsApp.
 
 `POST /api/contact` valida los campos recibidos y comprueba que el honeypot esté vacío. Con `DATABASE_URL`, guarda la solicitud aunque Resend no esté configurado; en ese caso responde que la notificación está pendiente. Si Resend está listo, programa el correo tras responder y actualiza `email_sent` cuando se envía. El endpoint limita a cinco las solicitudes por hash de IP en una hora.
 

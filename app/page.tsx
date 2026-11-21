@@ -16,7 +16,7 @@ export default function Home() {
       <AboutSection />
       <GallerySection />
       <ClientsSection />
-      <ContactSection />
+      <ContactSection databaseConfigured={Boolean(process.env.DATABASE_URL)} />
       <Footer />
     </main>
   )

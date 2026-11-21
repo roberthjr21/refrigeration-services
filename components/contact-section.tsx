@@ -11,7 +11,8 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react"
 import { contactSchema, type ContactFormValues } from "@/lib/contact-schema"
 import { siteConfig } from "@/lib/site-config"
 
-export function ContactSection() {
+export function ContactSection({ databaseConfigured }: { databaseConfigured: boolean }) {
+  const [useWhatsApp, setUseWhatsApp] = useState(!databaseConfigured)
   const [submissionMessage, setSubmissionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const {
     register,
@@ -26,7 +27,7 @@ export function ContactSection() {
 
   useEffect(() => {
     const requestedService = new URLSearchParams(window.location.search).get("serviceSlug")
-    if (requestedService) {
+    if (requestedService && contactSchema.shape.serviceSlug.safeParse(requestedService).success) {
       setValue("serviceSlug", requestedService)
       setValue("subject", `Información sobre: ${requestedService.replaceAll("-", " ")}`)
     }
@@ -34,20 +35,44 @@ export function ContactSection() {
 
   const onSubmit = async (values: ContactFormValues) => {
     setSubmissionMessage(null)
+    if (useWhatsApp) {
+      if (values.website) return
+      const message = [
+        "Hola, quisiera solicitar una cotización.",
+        `Nombre: ${values.name}`,
+        ...(values.company ? [`Empresa: ${values.company}`] : []),
+        `Correo: ${values.email}`,
+        `Teléfono: ${values.phone}`,
+        ...(values.serviceSlug ? [`Servicio: ${values.serviceSlug.replaceAll("-", " ")}`] : []),
+        `Asunto: ${values.subject}`,
+        "",
+        values.message,
+      ].join("\n")
+      const url = new URL(`https://wa.me/${siteConfig.contact.phones[0].whatsapp}`)
+      url.searchParams.set("text", message)
+      window.location.assign(url.toString())
+      return
+    }
+
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       })
+      if (response.status >= 500) throw new Error()
       const result = (await response.json()) as { message?: string }
-      if (!response.ok) throw new Error(result.message || "No pudimos enviar tu solicitud. Inténtalo nuevamente.")
+      if (!response.ok) {
+        setSubmissionMessage({ type: "error", text: result.message || "Revisa los datos e inténtalo nuevamente." })
+        return
+      }
       setSubmissionMessage({ type: "success", text: result.message || "Tu solicitud fue enviada correctamente." })
       reset()
-    } catch (error) {
+    } catch {
+      setUseWhatsApp(true)
       setSubmissionMessage({
         type: "error",
-        text: error instanceof Error ? error.message : "Ocurrió un error al enviar la solicitud.",
+        text: "No pudimos confirmar el registro. Puedes continuar por WhatsApp con los datos que escribiste.",
       })
     }
   }
@@ -67,7 +92,6 @@ export function ContactSection() {
             <CardHeader><CardTitle>Solicita tu Cotización</CardTitle></CardHeader>
             <CardContent>
               <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-                <input type="hidden" {...register("serviceSlug")} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="contact-name">Nombre completo *</label>
@@ -111,8 +135,9 @@ export function ContactSection() {
                     {submissionMessage.text}
                   </p>
                 )}
+                {useWhatsApp && <p className="text-sm text-muted-foreground">Abriremos el chat de la empresa con tu cotización lista. Pulsa Enviar en WhatsApp para entregarla.</p>}
                 <Button type="submit" disabled={isSubmitting} className="w-full bg-accent hover:bg-accent/90">
-                  {isSubmitting ? "Enviando solicitud…" : "Enviar Solicitud"}
+                  {useWhatsApp ? "Continuar por WhatsApp" : isSubmitting ? "Enviando solicitud…" : "Enviar solicitud"}
                 </Button>
               </form>
             </CardContent>
