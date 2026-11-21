@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   if (!process.env.DATABASE_URL) {
     return NextResponse.json(
-      { message: "El formulario no está conectado a la base de datos. Configura DATABASE_URL para habilitarlo." },
+      { message: "El registro en línea no está disponible en este momento." },
       { status: 503 },
     )
   }
